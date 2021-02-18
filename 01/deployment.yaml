@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podinfo-deployment # Name of the deployment
+  labels:
+    app: podinfo           # Labels can be provided, 'app' is convention
+spec:
+  replicas: 1              # How many pods to have running
+  selector:                # The content of 'selector' specifies which pods this deployment should manage
+    matchLabels:
+      app: podinfo
+  template:                # Template in this context means the template for the pods which are spawned
+    metadata:
+      labels:
+        app: podinfo       # All pods managed by this deployment should have 'app=podinfo' label in its' metadata
+    spec:
+      containers:          # Containers that should be running in the pod
+      - name: podinfo
+        image: stefanprodan/podinfo:latest
+        ports:
+        - containerPort: 9898

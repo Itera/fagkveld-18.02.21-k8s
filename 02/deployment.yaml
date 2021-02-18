@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fagkveld-test-api-deployment
+  labels:
+    app: fagkveld-test-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fagkveld-test-api
+  template:
+    metadata:
+      labels:
+        app: fagkveld-test-api
+    spec:
+      terminationGracePeriodSeconds: 10 # After sending stop signal (SIGTERM), wait N seonds, if pod hasn't exited, kubelet will tell container runtime to kill it (SIGKILL)
+      containers:
+      - name: fagkveld-test-api
+                                # <---- need 'image:' field here
+        imagePullPolicy: Always # Make sure kubelet always pull the image after scheduling, useful for testing where we might reuse tags
+        ports:
+        - containerPort: 8090
+        resources:              # The practical mechanism used enforce resource limits is cgroups, which is a Linux concept used by container runtime
+          requests:
+            memory: "32Mi"      # We expect the container to use 32 MiB memory (RAM), so let the kubelet on the node reserve it for this resource
+            cpu: "10m"          # We expect the container to utilize 1/100 CPU core, so let the kubelet on the node reserve it for this resource
+          limits:
+            memory: "128Mi"     # We don't expect memory usage to exceed 64 MiB, so let the kubelet on the node enforce this
+            cpu: "100m"         # We don't expect CPU usage to exceed 1/10 CPU core, so let the kubelet on the node enforce this
+        env:
+          - name: SECRET        # SECRET will be an environment variable in the container, so use `process.env.SECRET` for example in JS to reach it
+            valueFrom:
+              secretKeyRef:
+                name: fagkveld-test-api-secret # Name of the secret
+                key: SECRET                    # Which key inside the secret, a Kubernetes secret can store multiple key,value pairs
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: fagkveld-test-api-secret
+type: Opaque
+data:
+   # Kubernetes secrets are base64 encoded, not encrypted
+  SECRET: dGhpcyBpcyBhIHNlY3JldA==

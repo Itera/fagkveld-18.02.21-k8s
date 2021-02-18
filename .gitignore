@@ -1,0 +1,5 @@
+obj/
+bin/
+secrets.ps1
+secrets.sh
+secret.env

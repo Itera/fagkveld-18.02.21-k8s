@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-api-deployment
+  labels:
+    app: test-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-api
+  template:
+    metadata:
+      labels:
+        app: test-api
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: test-api
+        image: custom-image
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8090
+        resources:
+          requests:
+            memory: "32Mi"
+            cpu: "10m"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"        
+        env:
+          - name: SECRET
+            valueFrom:
+              secretKeyRef:
+                name: fagkveld-test-api-secret
+                key: SECRET
