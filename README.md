@@ -36,10 +36,10 @@ Handy resources:
 
 This will setup CLI and access to Azure and Kubernetes, and let you create a Kubernetes namespace to experiment in.
 
-Options:
-* Use powershell directly, with az, docker, kubectl, kustomize preinstalled
-* Use bash directly, with az, docker, kubectl, kustomize preinstalled
-* Build or pull k8sdev:latest container which has all the tools preinstalled
+Options for setups:
+* Use powershell directly, you need to make sure you hae working installations of az, docker, kubectl, kustomize
+* Use bash directly, you need to make sure you hae working installations of az, docker, kubectl, kustomize
+* Build or pull k8sdev:latest container which has all the tools preinstalled. Docker still needs to be installed and working beforehand
 
 A `secrets.ps1` file and a `secrets.sh` file will be posted when we start the fagkveld
 
@@ -61,9 +61,9 @@ $SUBSCRIPTION="<subscription>"
 > source secrets.sh
 ```
 
-
 ```sh
-# First we need to build and enter the dev container.
+# ---------------------------------------------------------------
+# OPTIONAL: use premade dev container
 # The dev container is the 'Dockerfile' in the root folder,
 # which is meant to install all required tooling for these labs
 ./build-dev.ps1
@@ -77,9 +77,7 @@ docker tag martinothamar/k8sdev:latest k8sdev:latest
 ./run-dev.ps1
 # or
 ./run-dev.sh
-
-# Now we have entered the Ubuntu 20.04 based dev container with tools installed:
-# az, docker, kubectl, helm, kustomize, k9s
+# ----------------------------------------------------------------
 
 # We can log into Azure using the service principal (SP auth is needed unless you are running Intune registrered device)
 az login --service-principal -u $SP_ID -p $SP_PW --tenant $TENANT
