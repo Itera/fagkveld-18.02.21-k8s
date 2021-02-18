@@ -41,7 +41,7 @@ Options for setups:
 * Use bash directly, you need to make sure you hae working installations of az, docker, kubectl, kustomize
 * Build or pull k8sdev:latest container which has all the tools preinstalled. Docker still needs to be installed and working beforehand
 
-A `secrets.ps1` file and a `secrets.sh` file will be posted when we start the fagkveld
+A `secrets.ps1` file and a `secrets.sh` file will be posted when we start the fagkveld. Remember to update the $NS variable before starting.
 
 ```
 > cat secrets.ps1
@@ -67,21 +67,21 @@ $SUBSCRIPTION="<subscription>"
 # The dev container is the 'Dockerfile' in the root folder,
 # which is meant to install all required tooling for these labs
 ./build-dev.ps1
-# or
+# OR
 ./build-dev.sh
-# or
+# OR
 docker pull martinothamar/k8sdev:latest
 docker tag martinothamar/k8sdev:latest k8sdev:latest
 
 # Then we can enter into the container.
 ./run-dev.ps1
-# or
+# OR
 ./run-dev.sh
 # ----------------------------------------------------------------
 
 # We can log into Azure using the service principal (SP auth is needed unless you are running Intune registrered device)
 az login --service-principal -u $SP_ID -p $SP_PW --tenant $TENANT
-# or if you just want to use your AAD account and your computer is registered in Intune
+# OR if you just want to use your AAD account and your computer is registered in Intune
 az login
 
 # Set the current subscription to MAD Platform
@@ -175,7 +175,7 @@ docker build . -t $REG/fagkveld-test-api:$NS
 
 # Test it locally
 docker run --rm -it -p 8090:8090 -e SECRET="this is a secret" --init $REG/fagkveld-test-api:$NS
-# Now open http://localhost:8090 in a browser or run
+# Now open http://localhost:8090/hello in a browser or run
 curl http://localhost:8090/hello
 # 'ctrl-c' to stop
 
